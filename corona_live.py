@@ -1,15 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Apr  7 22:50:35 2020
-
-@author: Amit kumar
-"""
-
 import requests
 from bs4 import BeautifulSoup
 from tabulate import tabulate
-import os
-import numpy as np
 import matplotlib.pyplot as plt
 
 extracts=lambda row: [x.text.replace('\n','') for x in row]
@@ -34,10 +25,6 @@ for row in all_rows:
 stats[-1][1]='Total cases'
 stats.remove(stats[-1])
 
-objects=[]
-for row in stats:
-        objects.append(row[1])
-
 performance=[]
 state=[]
 for row in stats:
@@ -47,12 +34,15 @@ for row in stats:
 table= tabulate(stats, headers=Short_Headers)
 print(table)
 
-plt.barh(state,performance,align='center',alpha=0.5,color=(234/256.0,128/256.0,252/256.0),
+fig,ax = plt.subplots()
+width = 0.75
+ax.barh(state,performance,width,color=(234/256.0,128/256.0,252/256.0),
          edgecolor=(106/256.0,27/256.0,154/256.0))
-plt.xticks(performance)
-plt.yticks(state)
-plt.xlim(1,(max(performance)//100 + 1)*100)
-plt.grid()
+ax.set_yticks(state)
+
+for i, v in enumerate(performance):
+    ax.text(v + 3, i - 0.25, str(v), color='blue')
+    
 plt.xlabel("Number of Active Cases")
 plt.title('Corona Virus Cases')
 plt.show()
